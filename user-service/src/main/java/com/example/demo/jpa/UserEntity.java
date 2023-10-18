@@ -11,7 +11,7 @@ import lombok.Data;
 
 @Data
 @Entity // 아무것도 없는 상태에서 Entity 클래스는 데이터베이스로 만들어져야 하는 요소
-@Table(name= "users") // 이름은 되도록 명시
+@Table(name= "users") // 테이블 이름은 되도록 명시
 public class UserEntity {
 
 	// 데이터베이스에 저장될 컬럼들을 정의하는 부분

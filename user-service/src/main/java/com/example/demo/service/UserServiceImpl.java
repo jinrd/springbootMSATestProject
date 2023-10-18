@@ -1,16 +1,20 @@
 package com.example.demo.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.UserDto;
 import com.example.demo.jpa.UserEntity;
 import com.example.demo.jpa.UserRepository;
+import com.example.demo.vo.ResponseOrder;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -57,5 +61,38 @@ public class UserServiceImpl implements UserService{
 		
 		return returnUserDto;
 	}
+
+	
+	// DB 에서 userId 를 가져오는 부분
+	@Override
+	public UserDto getUserByUserId(String userId) {
+		UserEntity userEntity = userRepository.findByUserId(userId);
+		
+		// 데이터 유무 확인
+		if(userEntity == null) {
+			throw new UsernameNotFoundException("User not found");
+		}
+		
+		UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
+		
+		List<ResponseOrder> orders = new ArrayList<>();
+		
+		userDto.setOrders(orders);
+		
+		return userDto;
+	}
+
+	
+	// DB 에서 전체 데이터를 가져오는 부
+	@Override
+	public Iterable<UserEntity> getUserByAll() {
+		/*
+		 레퍼지토리 안에 FindAll 이라는 함수는 기본으로 제공되는 함수이다.
+		 전체 데이터를 리턴
+		 */
+		return userRepository.findAll();
+	}
+	
+	
 
 }
